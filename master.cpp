@@ -4,14 +4,7 @@
 // Due Date: Mar 3rd, 2020
 // master.cpp
 
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <string.h>
-#include <iostream>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <stdlib.h> 
+#include "main.h"
 
 using namespace std;
 
@@ -64,11 +57,7 @@ int main()	{
 	}
 
 
-
-
-
-
-
+	
 	// If the senderPID is >0, then we konw that this version of this process is the parent.
 	// We will need to repeat the process to get the receiver running as well. 
 
