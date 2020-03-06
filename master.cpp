@@ -33,8 +33,12 @@ int main()	{
 
 	// Once we have our message queue, we can have the child programs communicate via the queue.
 	cout << PROCESS_NAME << "Message Queue with QID " << qid << " created." << endl;
-	// To create the receiver, we we fork our current process.
 
+	// To create the receiver, we we fork our current process.
+	// fork() creates a duplicate of the current process, and returns:
+	// 		- -1 if something went wrong
+	//		- 0 if we are the child process that was just created
+	//		- our PID otherwise
 	pid_t senderPID = fork();
 
 	// If we are in this scenario, then we have had some error creating a new process
@@ -46,7 +50,10 @@ int main()	{
 
 	// If the senderPID is 0, then that means this current iteration of master was created to become the sender.
 	// Since that is the case, we will make an exec call to turn this process in to sender instead
-
+	// exec works by taking our current process and replacing the code and data with the code and data of another process.
+	// there are many variations of exec, but the version I used was execvp, which takes in two arguments:
+	//  - The path to the file that we want to take over this process - in this case, it is ./sender
+	//	- The command line arguments for the program that you are giving control to
 	else if (senderPID == 0)	{
 		// This is creating the arguments that we are going to send in to sender
 	
@@ -57,7 +64,7 @@ int main()	{
 	}
 
 
-	
+
 	// If the senderPID is >0, then we konw that this version of this process is the parent.
 	// We will need to repeat the process to get the receiver running as well. 
 
@@ -75,12 +82,21 @@ int main()	{
 	}
 
 	// If the receiverPID is >0, then we konw that this version of this process is the parent.
+	//Now, we can display the process ID for each of the children - becuase we know the id's.
 
+	cout << PROCESS_NAME << "The sender's PID is " << senderPID << endl;
+	cout << PROCESS_NAME << "The receiver's PID is " << receiverPID << endl;
 	// If we are the parent, then we want to wait for the child's completion
 	while(wait(NULL) != -1);
 	// Once our child is complete, we are finished
 	cout << "Parent is finished!" << endl;
+
 	// Here, we need to remove the message queue that way it isnt hogging up part of our system
+	// The arguments we passed in to msgctl:
+	//		- the id of the queue that you want to control - which is qid
+	//		- the command that you want to initiate - we want to do an IPC removal by ID - the code for that is IPC_RMID
+	//		- the msqid data structure for the message that you are going to manipulate in some of the operation - we dont need that, since
+	//		  we are removing the queue rather than editing an existing message buffer
 	msgctl(qid, IPC_RMID, NULL);
 	exit(0);
 }

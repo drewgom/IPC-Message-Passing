@@ -18,7 +18,7 @@ int main(int argc, char *argv[])	{
 	//		- That it is beginning execution
 	cout << PROCESS_NAME << "Sender - PID: " << getpid() << " - begins execution." << endl;
 
-	cout << PROCESS_NAME << "Message queue ID is " << argv[1] << endl;
+	cout << PROCESS_NAME << "Message Queue ID is " << argv[1] << endl;
 
 	// The sender prompts the user for a line to send as a message
 	cout << PROCESS_NAME << "Please enter a message: " << endl;
